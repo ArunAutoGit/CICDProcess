@@ -1,0 +1,36 @@
+name: Run Selenium Tests
+
+on:
+  push:
+    branches:
+      - CiCDWeb
+
+jobs:
+  selenium-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'  # Specify the Java version
+        distribution: 'temurin'  # Choose the JDK distribution
+
+    - name: Set up Maven
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y maven
+
+    - name: Install ChromeDriver
+      run: |
+        wget https://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip -d /usr/local/bin/
+        chmod +x /usr/local/bin/chromedriver
+
+    - name: Install Chrome
+      run: sudo apt-get install -y google-chrome-stable
+
+    - name: Run Selenium Tests
